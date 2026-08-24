@@ -15,11 +15,12 @@ jobs:
           key: buildozer-v1
       - name: deps
         run: |
-          pip install buildozer
+          pip install buildozer cython
           sudo apt-get update
-          sudo apt-get install -y zlib1g-dev libffi-dev libssl-dev
+          sudo apt-get install -y zlib1g-dev libffi-dev libssl-dev libbz2-dev libsqlite3-dev autoconf automake libtool pkg-config cmake ninja-build
       - name: build
-        run: yes | buildozer android debug
+        run: |
+          yes | buildozer android debug > build.log 2>&1 || { tail -n 500 build.log; exit 1; }
       - uses: actions/upload-artifact@v4
         with:
           name: apk
